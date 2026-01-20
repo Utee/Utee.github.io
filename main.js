@@ -16,6 +16,7 @@ WHATSAPP: <a href='https://wa.me/23055106320' target='_blank' class='term-link'>
 PHONE:    <a href='tel:+2349027915935' class='term-link'>+2349027915935</a>
 GITHUB:   <a href='https://github.com/Utee' target='_blank' class='term-link'>github.com/Utee</a>`,
     cv: "ACCESSING SECURE ARCHIVE... Initializing download for Utee_Jacob_CV.pdf",
+    matrix: "SIGNAL OVERLOAD: Accessing the Source Code...",
     hire: "Redirecting to encrypted contact portal... Opening Mail Client."
 };
 
@@ -47,6 +48,8 @@ const initMatrix = () => {
     };
     setInterval(draw, CONFIG.matrixSpeed);
 };
+
+
 
 // --- ANIMATION HELPERS ---
 const showLoadingBar = (callback) => {
@@ -119,6 +122,26 @@ const executeCommand = (cmd) => {
                 window.location.href = "mailto:uteejacob@gmail.com?subject=Hiring Inquiry for Utee Jacob";
             }, 1000);
             break;
+
+        case 'matrix':
+    // 1. Speed up the Matrix Rain
+    const originalSpeed = CONFIG.matrixSpeed;
+    CONFIG.matrixSpeed = 5; 
+    initMatrix(); // Re-initialize with new speed
+
+    // 2. Add a glitch effect to the terminal via CSS
+    output.style.textShadow = "2px 2px 10px #00FF41, -2px -2px 10px #ff0000";
+    output.classList.add('glitch-animation');
+
+    // 3. Reset after 5 seconds
+    setTimeout(() => {
+        CONFIG.matrixSpeed = 30;
+        initMatrix();
+        output.style.textShadow = "0 0 8px var(--green)";
+        output.classList.remove('glitch-animation');
+        printToTerminal("System stabilized. Reality restored.");
+    }, 5000);
+    break;
     }
 };
 
