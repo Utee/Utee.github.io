@@ -109,7 +109,7 @@ const executeCommand = (cmd) => {
         case 'cv':
             showLoadingBar(() => {
                 const link = document.createElement('a');
-                link.href = 'assets/Utee_Jacob_CV.pdf';
+                link.href = 'https://utee.github.io/assets/Utee_Jacob_CV.pdf';
                 link.download = 'Utee_Jacob_CV.pdf';
                 document.body.appendChild(link);
                 link.click();
