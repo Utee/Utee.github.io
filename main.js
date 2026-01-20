@@ -7,7 +7,7 @@ const CONFIG = {
 
 const COMMANDS = {
     help: "Available commands: [bio] [skills] [projects] [contact] [cv] [hire] [clear]",
-    bio: "NAME: Utee Jacob\nROLE: Backend [Python] Developer\nMISSION: Building secure, scalable digital ecosystems.",
+    bio: "Utibe-Abasi Jacob Udoh, popularly known as Utee Jacob, is a Python-focused software developer, backend engineer, and business developer. He is a Co-founder of Ciel Tech Ltd and a core builder of Vibe Garage Entertainment, a music streaming and artist-focused platform.",
     skills: "FRONTEND:          [######----] 65%\nBACKEND(Python):   [#########-] 90%\nSECURITY:          [########--] 80%\nDIGITAL MARKETING: [########--] 80%",
     projects: "1. Project_Alpha: Encrypted Messaging\n2. Cyber_Scan: Network Tool\n3. Portfolio_OS: This Terminal\n4. AI Ethics: Research and Development",
     contact: `
@@ -17,7 +17,10 @@ PHONE:    <a href='tel:+2349027915935' class='term-link'>+2349027915935</a>
 GITHUB:   <a href='https://github.com/Utee' target='_blank' class='term-link'>github.com/Utee</a>`,
     cv: "ACCESSING SECURE ARCHIVE... Initializing download for Utee_Jacob_CV.pdf",
     matrix: "SIGNAL OVERLOAD: Accessing the Source Code...",
-    hire: "Redirecting to encrypted contact portal... Opening Mail Client."
+    hire: "Redirecting to encrypted contact portal... Opening Mail Client.",
+    // SECRET COMMANDS
+    sudo: "<span style='color:red'>ERROR: UNAUTHORIZED ACCESS ATTEMPT DETECTED.</span>",
+    password: "Nice try. The system is protected by 256-bit encryption. You'll need more than a guess."
 };
 
 // --- MATRIX BACKGROUND ---
@@ -48,8 +51,6 @@ const initMatrix = () => {
     };
     setInterval(draw, CONFIG.matrixSpeed);
 };
-
-
 
 // --- ANIMATION HELPERS ---
 const showLoadingBar = (callback) => {
@@ -124,24 +125,27 @@ const executeCommand = (cmd) => {
             break;
 
         case 'matrix':
-    // 1. Speed up the Matrix Rain
-    const originalSpeed = CONFIG.matrixSpeed;
-    CONFIG.matrixSpeed = 5; 
-    initMatrix(); // Re-initialize with new speed
+            const originalSpeed = CONFIG.matrixSpeed;
+            CONFIG.matrixSpeed = 5; 
+            initMatrix(); 
 
-    // 2. Add a glitch effect to the terminal via CSS
-    output.style.textShadow = "2px 2px 10px #00FF41, -2px -2px 10px #ff0000";
-    output.classList.add('glitch-animation');
+            output.style.textShadow = "2px 2px 10px #00FF41, -2px -2px 10px #ff0000";
+            output.classList.add('glitch-animation');
 
-    // 3. Reset after 5 seconds
-    setTimeout(() => {
-        CONFIG.matrixSpeed = 30;
-        initMatrix();
-        output.style.textShadow = "0 0 8px var(--green)";
-        output.classList.remove('glitch-animation');
-        printToTerminal("System stabilized. Reality restored.");
-    }, 5000);
-    break;
+            setTimeout(() => {
+                CONFIG.matrixSpeed = 30;
+                initMatrix();
+                output.style.textShadow = "0 0 8px var(--green)";
+                output.classList.remove('glitch-animation');
+                printToTerminal("System stabilized. Reality restored.");
+            }, 5000);
+            break;
+
+        case 'sudo':
+            setTimeout(() => {
+                printToTerminal("<span style='color:red'>[SECURITY ALERT]: IP Logged. Admin notified. Termination sequence bypassed... for now.</span>");
+            }, 1000);
+            break;
     }
 };
 
