@@ -1,23 +1,629 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Utee Jacob | Secure Terminal</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Utee Jacob — Field Dossier</title>
+<meta name="description" content="Utee Jacob — Software developer, business developer, and founder of Ciel Tech Ltd. Backend engineering, cybersecurity, and digital products.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Special+Elite&family=Spectral:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #14110d;
+    --bg-deep: #0c0a08;
+    --panel: #1c170f;
+    --panel-hi: #241d13;
+    --paper: #e8dfc6;
+    --ink: #ece2cc;
+    --ink-dim: #a89a80;
+    --ink-faint: #6b604e;
+    --brass: #c19a3f;
+    --brass-dim: #8a6d2c;
+    --oxblood: #9a3324;
+    --oxblood-bright: #c24730;
+    --line: rgba(193,154,63,0.22);
+    --shadow: rgba(0,0,0,0.55);
+    --serif-display: 'Fraunces', serif;
+    --type-label: 'Special Elite', 'Courier New', monospace;
+    --serif-body: 'Spectral', serif;
+  }
+
+  *{ box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  ::selection{ background:var(--oxblood); color:var(--paper); }
+
+  body{
+    margin:0;
+    background:
+      radial-gradient(ellipse 90% 60% at 50% -10%, rgba(193,154,63,0.08), transparent 60%),
+      radial-gradient(ellipse 80% 50% at 100% 100%, rgba(154,51,36,0.06), transparent 60%),
+      var(--bg);
+    color:var(--ink);
+    font-family:var(--serif-body);
+    font-size:17px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+
+  /* film grain overlay */
+  body::before{
+    content:"";
+    position:fixed; inset:0;
+    z-index:200;
+    pointer-events:none;
+    opacity:0.05;
+    mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  .vignette{
+    position:fixed; inset:0; z-index:199; pointer-events:none;
+    box-shadow: inset 0 0 18vw rgba(0,0,0,0.65);
+  }
+
+  a{ color:inherit; }
+
+  .wrap{ max-width:980px; margin:0 auto; padding:0 28px; }
+
+  .eyebrow{
+    font-family:var(--type-label);
+    font-size:12.5px;
+    letter-spacing:0.16em;
+    text-transform:uppercase;
+    color:var(--brass);
+    display:flex; align-items:center; gap:10px;
+  }
+  .eyebrow::before{
+    content:""; width:22px; height:1px; background:var(--brass-dim);
+  }
+
+  .rule{
+    height:1px;
+    background:linear-gradient(90deg, var(--line), transparent 85%);
+    border:0;
+    margin:0;
+  }
+
+  /* ===== NAV ===== */
+  nav{
+    position:fixed; top:0; left:0; right:0; z-index:100;
+    backdrop-filter: blur(10px);
+    background:linear-gradient(180deg, rgba(12,10,8,0.92), rgba(12,10,8,0.78));
+    border-bottom:1px solid var(--line);
+  }
+  .navrow{
+    max-width:980px; margin:0 auto; padding:16px 28px;
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .navmark{
+    font-family:var(--type-label); font-size:13px; letter-spacing:0.08em;
+    color:var(--ink); text-decoration:none;
+  }
+  .navmark span{ color:var(--brass); }
+  .navlinks{ display:flex; gap:26px; list-style:none; margin:0; padding:0; }
+  .navlinks a{
+    font-family:var(--type-label); font-size:11.5px; letter-spacing:0.1em;
+    text-transform:uppercase; text-decoration:none; color:var(--ink-dim);
+    transition:color .25s ease;
+  }
+  .navlinks a:hover{ color:var(--brass); }
+  @media (max-width:640px){ .navlinks{ display:none; } }
+
+  /* ===== HERO ===== */
+  .hero{
+    position:relative;
+    min-height:100svh;
+    display:flex; flex-direction:column; justify-content:center;
+    padding:140px 0 80px;
+  }
+  .hero .wrap{ position:relative; }
+
+  .file-tab{
+    display:inline-flex; align-items:center; gap:8px;
+    font-family:var(--type-label); font-size:11.5px; letter-spacing:0.14em;
+    color:var(--ink-dim); text-transform:uppercase;
+    border:1px solid var(--line); padding:6px 12px;
+    background:var(--panel);
+    margin-bottom:28px;
+  }
+  .file-tab b{ color:var(--brass); font-weight:400; }
+  .dot{ width:6px; height:6px; border-radius:50%; background:var(--oxblood-bright); box-shadow:0 0 8px var(--oxblood-bright); }
+
+  h1.name{
+    font-family:var(--serif-display);
+    font-weight:600;
+    font-size:clamp(48px, 9vw, 104px);
+    line-height:0.98;
+    letter-spacing:-0.01em;
+    margin:0 0 6px;
+    color:var(--paper);
+  }
+  h1.name em{
+    font-style:italic; font-weight:500; color:var(--ink-faint);
+  }
+
+  .role-line{
+    font-family:var(--type-label);
+    font-size:clamp(13px,2vw,16px);
+    letter-spacing:0.06em;
+    color:var(--brass);
+    margin:18px 0 30px;
+  }
+  .role-line .sep{ color:var(--ink-faint); margin:0 10px; }
+
+  .hero-desc{
+    max-width:560px;
+    color:var(--ink-dim);
+    font-size:17px;
+    margin-bottom:40px;
+  }
+
+  .hero-actions{ display:flex; gap:16px; flex-wrap:wrap; align-items:center; }
+  .btn{
+    font-family:var(--type-label); font-size:12px; letter-spacing:0.1em; text-transform:uppercase;
+    text-decoration:none; padding:14px 22px;
+    border:1px solid var(--brass-dim); color:var(--paper);
+    position:relative; overflow:hidden;
+    transition:border-color .25s ease, color .25s ease;
+  }
+  .btn.primary{ background:var(--oxblood); border-color:var(--oxblood); color:#f3e9d8; }
+  .btn.primary:hover{ background:var(--oxblood-bright); border-color:var(--oxblood-bright); }
+  .btn.ghost:hover{ border-color:var(--brass); color:var(--brass); }
+
+  .btn-cv{
+    font-family:var(--type-label); font-size:12px; letter-spacing:0.1em; text-transform:uppercase;
+    text-decoration:none; padding:14px 22px 14px 18px;
+    color:var(--brass); border:1px dashed var(--brass-dim);
+    display:inline-flex; align-items:center; gap:9px;
+    transition:border-color .25s ease, color .25s ease, background .25s ease;
+  }
+  .btn-cv::before{
+    content:"⬇"; font-size:12px; line-height:1;
+  }
+  .btn-cv:hover{ border-color:var(--brass); color:var(--paper); background:rgba(193,154,63,0.08); }
+
+  /* stamp */
+  .stamp{
+    position:absolute;
+    top:36px; right:0;
+    width:150px; height:150px;
+    border:3px double var(--oxblood-bright);
+    border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    color:var(--oxblood-bright);
+    opacity:0;
+    transform:rotate(-18deg) scale(2.6);
+    mix-blend-mode:normal;
+    animation: stamp-in 0.55s cubic-bezier(.2,.9,.3,1.1) 0.5s forwards;
+  }
+  .stamp svg{ width:100%; height:100%; }
+  .stamp text{
+    font-family:var(--type-label); font-size:10.6px; letter-spacing:2px; fill:var(--oxblood-bright);
+  }
+  .stamp .center{
+    position:absolute; font-family:var(--serif-display); font-style:italic; font-weight:600; font-size:15px;
+    color:var(--oxblood-bright);
+  }
+  @keyframes stamp-in{
+    0%{ opacity:0; transform:rotate(-18deg) scale(2.6); }
+    60%{ opacity:0.9; transform:rotate(-12deg) scale(0.94); }
+    100%{ opacity:0.85; transform:rotate(-12deg) scale(1); }
+  }
+  @media (max-width:760px){ .stamp{ position:static; margin:28px 0 0; transform:rotate(-8deg) scale(1); animation:none; opacity:0.85; width:118px;height:118px; } }
+  @media (prefers-reduced-motion: reduce){ .stamp{ animation:none; opacity:0.85; transform:rotate(-12deg) scale(1); } }
+
+  .scroll-cue{
+    margin-top:64px; font-family:var(--type-label); font-size:11px; color:var(--ink-faint);
+    letter-spacing:0.14em; text-transform:uppercase;
+  }
+
+  /* ===== SECTION shared ===== */
+  section{ padding:100px 0; position:relative; }
+  .section-head{ margin-bottom:52px; }
+  .section-title{
+    font-family:var(--serif-display); font-weight:600; font-style:italic;
+    font-size:clamp(30px,4.4vw,44px); color:var(--paper); margin:12px 0 0;
+  }
+
+  /* ===== DOSSIER / ABOUT ===== */
+  .dossier{
+    display:grid; grid-template-columns:220px 1fr; gap:52px;
+  }
+  @media (max-width:760px){ .dossier{ grid-template-columns:1fr; } }
+
+  .redacted-photo{
+    aspect-ratio:3/4;
+    background:
+      repeating-linear-gradient(115deg, rgba(0,0,0,0.4) 0 2px, transparent 2px 5px),
+      linear-gradient(160deg, #0f0d0a, #241d13);
+    border:1px solid var(--line);
+    position:relative;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .redacted-photo span{
+    font-family:var(--type-label); font-size:11px; letter-spacing:0.1em;
+    color:var(--ink-faint); text-align:center; padding:0 16px; text-transform:uppercase;
+  }
+  .redacted-bar{
+    position:absolute; height:14px; background:#0a0806; left:14%; right:14%;
+  }
+  .redacted-bar.b1{ top:38%; }
+  .redacted-bar.b2{ top:52%; width:60%; left:20%; right:auto; }
+
+  .bio p{ color:var(--ink-dim); margin:0 0 18px; font-size:16.5px; }
+  .bio p b{ color:var(--paper); font-weight:600; }
+
+  .facts{
+    margin-top:30px; display:grid; grid-template-columns:1fr 1fr; gap:18px 30px;
+  }
+  @media (max-width:480px){ .facts{ grid-template-columns:1fr; } }
+  .fact dt{
+    font-family:var(--type-label); font-size:10.5px; letter-spacing:0.12em; text-transform:uppercase;
+    color:var(--brass-dim); margin-bottom:4px;
+  }
+  .fact dd{ margin:0; color:var(--ink); font-size:15px; }
+
+  /* ===== CASE FILES ===== */
+  .case{
+    border:1px solid var(--line);
+    background:linear-gradient(180deg, var(--panel-hi), var(--panel));
+    padding:34px 32px;
+    margin-bottom:22px;
+    position:relative;
+  }
+  .case-top{
+    display:flex; justify-content:space-between; align-items:flex-start; gap:20px; flex-wrap:wrap;
+    margin-bottom:14px;
+  }
+  .case-num{
+    font-family:var(--type-label); font-size:12px; color:var(--ink-faint); letter-spacing:0.1em;
+  }
+  .case-status{
+    font-family:var(--type-label); font-size:10.5px; letter-spacing:0.12em; text-transform:uppercase;
+    padding:5px 10px; border:1px solid currentColor;
+  }
+  .case-status.live{ color:#6fae6b; }
+  .case-status.dev{ color:var(--brass); }
+  .case-status.archived{ color:var(--ink-faint); }
+
+  .case h3{
+    font-family:var(--serif-display); font-weight:600; font-size:clamp(24px,3vw,32px);
+    color:var(--paper); margin:0 0 6px;
+  }
+  .case .tagline{ color:var(--brass); font-family:var(--type-label); font-size:12.5px; letter-spacing:0.04em; margin-bottom:16px; }
+  .case p.desc{ color:var(--ink-dim); font-size:15.5px; max-width:640px; margin:0 0 18px; }
+
+  .case-meta{ display:flex; flex-wrap:wrap; gap:8px 10px; margin-bottom:18px; }
+  .chip{
+    font-family:var(--type-label); font-size:10.5px; letter-spacing:0.06em; text-transform:uppercase;
+    color:var(--ink-dim); border:1px solid var(--line); padding:5px 10px;
+  }
+  .case-links{ display:flex; gap:20px; flex-wrap:wrap; }
+  .case-links a{
+    font-family:var(--type-label); font-size:12px; letter-spacing:0.06em; text-transform:uppercase;
+    color:var(--brass); text-decoration:none; border-bottom:1px solid var(--brass-dim); padding-bottom:2px;
+  }
+  .case-links a:hover{ color:var(--paper); border-color:var(--paper); }
+
+  /* ===== SERVICES ===== */
+  .services{ display:grid; grid-template-columns:1fr 1fr; gap:1px; background:var(--line); border:1px solid var(--line); }
+  @media (max-width:640px){ .services{ grid-template-columns:1fr; } }
+  .service{ background:var(--bg); padding:30px 28px; }
+  .service .mark{ color:var(--oxblood-bright); font-family:var(--serif-display); font-style:italic; font-size:22px; }
+  .service h4{ font-family:var(--serif-display); font-weight:600; color:var(--paper); font-size:20px; margin:10px 0 8px; }
+  .service p{ color:var(--ink-dim); font-size:14.5px; margin:0; }
+
+  /* ===== RECORD / EXPERIENCE ===== */
+  .record{ border-left:1px solid var(--line); margin-left:6px; }
+  .record-item{ position:relative; padding:0 0 40px 34px; }
+  .record-item:last-child{ padding-bottom:0; }
+  .record-item::before{
+    content:""; position:absolute; left:-6px; top:4px; width:11px; height:11px;
+    background:var(--bg-deep); border:2px solid var(--brass);
+  }
+  .record-date{ font-family:var(--type-label); font-size:11.5px; color:var(--brass); letter-spacing:0.08em; margin-bottom:6px; }
+  .record-item h4{ font-family:var(--serif-display); font-size:21px; font-weight:600; color:var(--paper); margin:0 0 4px; }
+  .record-org{ color:var(--ink-faint); font-size:13.5px; font-style:italic; margin-bottom:10px; }
+  .record-item p{ color:var(--ink-dim); font-size:15px; margin:0; max-width:600px; }
+
+  /* ===== CONTACT ===== */
+  .contact-box{
+    border:1px solid var(--line);
+    background:var(--panel);
+    padding:50px 44px;
+    text-align:center;
+  }
+  @media (max-width:600px){ .contact-box{ padding:40px 24px; } }
+  .contact-box h2{
+    font-family:var(--serif-display); font-style:italic; font-weight:600;
+    font-size:clamp(28px,4vw,42px); color:var(--paper); margin:0 0 14px;
+  }
+  .contact-box > p{ color:var(--ink-dim); max-width:480px; margin:0 auto 34px; }
+  .contact-grid{
+    display:flex; flex-wrap:wrap; justify-content:center; gap:12px;
+  }
+  .contact-grid a{
+    font-family:var(--type-label); font-size:12px; letter-spacing:0.06em; text-transform:uppercase;
+    text-decoration:none; color:var(--ink); border:1px solid var(--line); padding:12px 18px;
+    transition:border-color .25s ease, color .25s ease;
+  }
+  .contact-grid a:hover{ border-color:var(--brass); color:var(--brass); }
+
+  footer{
+    padding:40px 0 60px; text-align:center;
+    font-family:var(--type-label); font-size:11px; letter-spacing:0.08em;
+    color:var(--ink-faint);
+  }
+  footer a{ color:var(--ink-faint); text-decoration:underline; }
+
+  .reveal{ opacity:0; transform:translateY(18px); transition:opacity .7s ease, transform .7s ease; }
+  .reveal.in{ opacity:1; transform:translateY(0); }
+</style>
 </head>
 <body>
 
-    <canvas id="matrix-canvas"></canvas>
+<div class="vignette"></div>
 
-    <div id="terminal">
-        <div id="output"></div>
-        <div class="input-area">
-            <span>sudo@uteejacob:~$</span>
-            <input type="text" id="cmd-input" autofocus autocomplete="off">
-        </div>
+<nav>
+  <div class="navrow">
+    <a href="#top" class="navmark">UTEE <span>JACOB</span></a>
+    <ul class="navlinks">
+      <li><a href="#dossier">Dossier</a></li>
+      <li><a href="#cases">Case Files</a></li>
+      <li><a href="#services">Services</a></li>
+      <li><a href="#record">Record</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="wrap">
+
+    <div class="stamp" aria-hidden="true">
+      <svg viewBox="0 0 150 150">
+        <defs>
+          <path id="circlePath" d="M 75,75 m -58,0 a 58,58 0 1,1 116,0 a 58,58 0 1,1 -116,0" />
+        </defs>
+        <text>
+          <textPath href="#circlePath" startOffset="2%">CLEARANCE GRANTED · CIEL TECH LTD ·</textPath>
+        </text>
+      </svg>
+      <div class="center">FILE&nbsp;OPEN</div>
     </div>
 
-    <script src="main.js"></script>
+    <div class="file-tab"><span class="dot"></span> Personnel File <b>№ 0996</b> — Status: Active</div>
+
+    <h1 class="name">Utee<br><em>Jacob</em></h1>
+
+    <div class="role-line">Software Developer <span class="sep">/</span> Business Developer <span class="sep">/</span> CTO, Ciel Tech Ltd</div>
+
+    <p class="hero-desc">Python-first backend engineer and founder building production-grade digital products — from music platforms to security tooling — out of Port Harcourt, Nigeria. Background in cybersecurity and digital forensics informs everything he ships.</p>
+
+    <div class="hero-actions">
+      <a href="#cases" class="btn primary">Review the case files</a>
+      <a href="#contact" class="btn ghost">Establish contact</a>
+      <a href="assets/Utee_Jacob_CV.pdf" download class="btn-cv">Download CV</a>
+    </div>
+
+    <div class="scroll-cue">↓ Continue reading</div>
+  </div>
+</header>
+
+<section id="dossier">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">Exhibit A</div>
+      <h2 class="section-title">Subject profile</h2>
+    </div>
+
+    <div class="dossier reveal">
+      <div class="redacted-photo">
+        <div class="redacted-bar b1"></div>
+        <div class="redacted-bar b2"></div>
+        <span>Photograph<br>on file</span>
+      </div>
+
+      <div class="bio">
+        <p><b>Utee Jacob</b> (Utibe-Abasi Jacob Udoh) is a Nigerian software developer, technology entrepreneur, and business developer. He is <b>CTO of Ciel Tech Ltd</b> and founder of <b>Vibe Garage Entertainment</b>, the company behind VibeGarage — a digital music platform helping independent artists distribute, promote, and monetize their work.</p>
+        <p>His technical focus sits in <b>Python backend development</b> — FastAPI, Django, and Flask — paired with React/TypeScript on the frontend and Supabase or SQLite underneath. A background in <b>cybersecurity and digital forensics</b>, including ethical hacking training, shapes how he approaches authentication, payments, and user data.</p>
+        <p>He doesn't stop at code. Product strategy, monetization, compliance, and marketing are part of the same job to him — building something people can actually pay for and trust.</p>
+
+        <dl class="facts">
+          <div class="fact"><dt>Based</dt><dd>Port Harcourt, Nigeria</dd></div>
+          <div class="fact"><dt>Specialty</dt><dd>Python &amp; Backend Systems</dd></div>
+          <div class="fact"><dt>Background</dt><dd>Cybersecurity &amp; Digital Forensics</dd></div>
+          <div class="fact"><dt>Currently</dt><dd>CTO, Ciel Tech Ltd</dd></div>
+        </dl>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="cases">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">Exhibit B</div>
+      <h2 class="section-title">Case files</h2>
+    </div>
+
+    <div class="case reveal">
+      <div class="case-top">
+        <div class="case-num">CASE FILE № 01</div>
+        <div class="case-status live">Live — Deployed</div>
+      </div>
+      <h3>VibeGarage</h3>
+      <div class="tagline">Vibe Garage Entertainment — Ciel Tech Ltd</div>
+      <p class="desc">A digital music platform connecting independent artists and listeners — streaming, promotion, an earnings ledger with real payout infrastructure, and a smart-link product (FanLink) for fan growth. Rebuilt from the ground up on FastAPI and Supabase.</p>
+      <div class="case-meta">
+        <span class="chip">FastAPI</span>
+        <span class="chip">Supabase</span>
+        <span class="chip">React / Vite</span>
+        <span class="chip">Paystack</span>
+      </div>
+      <div class="case-links">
+        <a href="https://vibegarage.app" target="_blank" rel="noopener">Visit vibegarage.app →</a>
+        <a href="https://blog.vibegarage.app" target="_blank" rel="noopener">Read the blog →</a>
+      </div>
+    </div>
+
+    <div class="case reveal">
+      <div class="case-top">
+        <div class="case-num">CASE FILE № 02</div>
+        <div class="case-status live">Live — Free Tool</div>
+      </div>
+      <h3>PathGuard</h3>
+      <div class="tagline">Ciel Tech Ltd — Free Security Tool</div>
+      <p class="desc">Built after losing ~$271 in SOL to an uninitialized wallet address. PathGuard verifies a crypto destination address live on-chain before you send — checking network match and account readiness across Solana, Ethereum, and Bitcoin.</p>
+      <div class="case-meta">
+        <span class="chip">Python</span>
+        <span class="chip">Blockchain APIs</span>
+        <span class="chip">Address Verification</span>
+      </div>
+      <div class="case-links">
+        <a href="https://pathguard-three.vercel.app/" target="_blank" rel="noopener">Try PathGuard →</a>
+      </div>
+    </div>
+
+    <div class="case reveal">
+      <div class="case-top">
+        <div class="case-num">CASE FILE № 03</div>
+        <div class="case-status live">Live — Castle Predictions</div>
+      </div>
+      <h3>jarvis_bot</h3>
+      <div class="tagline">Telegram — @UcastleBot</div>
+      <p class="desc">A Python-based automation system built around a Poisson goals model seeded with 2024/25 European league data, delivering match predictions to Telegram as <b>Castle Predictions</b>. Runs on GitHub Actions with a Cloudflare Worker webhook and a live Chart.js performance dashboard.</p>
+      <div class="case-meta">
+        <span class="chip">Python</span>
+        <span class="chip">Poisson Modelling</span>
+        <span class="chip">Telegram API</span>
+        <span class="chip">GitHub Actions</span>
+      </div>
+      <div class="case-links">
+        <a href="https://t.me/UcastleBot" target="_blank" rel="noopener">Open Castle Predictions →</a>
+      </div>
+    </div>
+
+    <div class="case reveal">
+      <div class="case-top">
+        <div class="case-num">CASE FILE № 04</div>
+        <div class="case-status archived">Archived</div>
+      </div>
+      <h3>Health Code Medical Archive</h3>
+      <div class="tagline">Contract — Nov 2023 to Dec 2024</div>
+      <p class="desc">A medical records management system built to prioritize data privacy and transparency, with a focus on cybersecurity risk management and regulatory compliance.</p>
+      <div class="case-meta">
+        <span class="chip">Flask</span>
+        <span class="chip">Cybersecurity</span>
+        <span class="chip">Compliance</span>
+      </div>
+      <div class="case-links">
+        <a href="https://github.com/utee" target="_blank" rel="noopener">View on GitHub →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="services">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">Exhibit C</div>
+      <h2 class="section-title">Available for engagement</h2>
+    </div>
+
+    <div class="services reveal">
+      <div class="service">
+        <div class="mark">§</div>
+        <h4>Backend systems</h4>
+        <p>API design and development in FastAPI, Django, or Flask — auth, database modelling, and everything that has to hold up in production.</p>
+      </div>
+      <div class="service">
+        <div class="mark">§</div>
+        <h4>Supabase &amp; Postgres</h4>
+        <p>Schema design, RLS policies, migrations, and debugging the kind of race conditions that only show up under real traffic.</p>
+      </div>
+      <div class="service">
+        <div class="mark">§</div>
+        <h4>Payments &amp; payouts</h4>
+        <p>Paystack integration, earnings ledgers, platform fee logic, and payout automation — built and shipped on a live product.</p>
+      </div>
+      <div class="service">
+        <div class="mark">§</div>
+        <h4>Full-stack builds</h4>
+        <p>FastAPI or Django backends paired with React/Vite frontends, deployed via GitHub Actions and Cloudflare Workers.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="record">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">Exhibit D</div>
+      <h2 class="section-title">Field record</h2>
+    </div>
+
+    <div class="record reveal">
+      <div class="record-item">
+        <div class="record-date">Aug 2024 — Present</div>
+        <h4>Chief Technology Officer</h4>
+        <div class="record-org">Ciel Tech Ltd</div>
+        <p>Founded and leads the technology company behind VibeGarage and PathGuard — from architecture through deployment, payments, and compliance.</p>
+      </div>
+      <div class="record-item">
+        <div class="record-date">May 2024 — Present</div>
+        <h4>Software Developer (Contract)</h4>
+        <div class="record-org">SybrStack Technologies · Remote, Nigeria</div>
+        <p>Building web applications in Python and Django, collaborating cross-functionally on functionality and scalability.</p>
+      </div>
+      <div class="record-item">
+        <div class="record-date">Nov 2023 — Dec 2024</div>
+        <h4>Software Developer (Contract)</h4>
+        <div class="record-org">Health Code Medical Archive · Remote</div>
+        <p>Contributed to a medical records management system with a focus on cybersecurity risk management and compliance.</p>
+      </div>
+      <div class="record-item">
+        <div class="record-date">2018 — 2022</div>
+        <h4>Education</h4>
+        <div class="record-org">Middlesex University, Mauritius · NIIT, Port Harcourt · Loctech IT Training Institute</div>
+        <p>Diploma, Cyber Security &amp; Digital Forensics · Associate's Degree, Computer Software Engineering · Diploma, Ethical Hacking (CEH V10).</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="wrap">
+    <div class="contact-box reveal">
+      <div class="eyebrow" style="justify-content:center; margin-bottom:14px;">Exhibit E</div>
+      <h2>Establish contact</h2>
+      <p>Open to freelance work, contract engagements, and conversations about backend systems, security, or music tech.</p>
+      <div class="contact-grid">
+        <a href="mailto:uteejacob@gmail.com">Email</a>
+        <a href="https://github.com/Utee" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://www.linkedin.com/in/uteejacob/" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="https://x.com/UtibeAbasiJacob" target="_blank" rel="noopener">X / Twitter</a>
+        <a href="https://web.facebook.com/UtibeAbasiJacobUdoh" target="_blank" rel="noopener">Facebook</a>
+        <a href="https://t.me/UteeJacob" target="_blank" rel="noopener">Telegram</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    END OF FILE — © 2026 UTEE JACOB · CIEL TECH LTD · <a href="mailto:uteejacob@gmail.com">uteejacob@gmail.com</a>
+  </div>
+</footer>
+
+<script>
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+</script>
+
 </body>
 </html>
